@@ -4,56 +4,65 @@ var confirmNumber;
 var confirmCharacter;
 var confirmUppercase;
 var confirmLowercase;
-
 special = ["!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "'", ",", ".", "/", "`", "~", ":", ";", "?", "<", ">", "[", "]", "|", "-", "+"];
-
 number = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-
 lowerCase = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
-
 space = [];
-
 var choices = [];
 
 //had to google how to do this
 var toUpper = function(x) {
   return x.toUpperCase();
 }
-
-//googled how to do this too
 upperCase = lowerCase.map(toUpper);
 
-function generatePassword() {
-  //asks for user input, parseInt makes sure that an integer is returned
+
+//separate each task into different functions to make code easier to read/understand and debug
+
+//asks the user for the required password length
+function passwordLength() {
   enter = parseInt(prompt("How many characters would you like your password to be? Must be between 8 and 128."));
   if (!enter){
     alert("You must enter a number.");
     //will restart the function so they can enter a number.
-    generatePassword();
+    passwordLength();
   } else if (enter < 8 || enter > 128) {
     //confirms user input and starts prompts
     alert("You must enter a value between 8 and 128.");
-    generatePassword();
-  } else {
-    //confirms user input, had to google this
-    confirmUppercase = confirm("Do you want your password to contain uppercase letters?");
-    confirmLowercase = confirm("Do you want your password to contain lowercase letters?");
-    confirmNumber = confirm("Do you want your password to have numbers?");
-    confirmSpecial = confirm("Do you want your password to contain special characters?");
+    passwordLength();
   }
-//confirms that nothing was selected and alerts the user
-  if (!confirmUppercase && !confirmLowercase && !confirmNumber && !confirmSpecial) {
+}
+
+
+//asks the user for the password criteria
+function passwordCriteria () {
+  confirmUppercase = confirm("Do you want your password to contain uppercase letters?");
+  confirmLowercase = confirm("Do you want your password to contain lowercase letters?");
+  confirmNumber = confirm("Do you want your password to have numbers?");
+  confirmSpecial = confirm("Do you want your password to contain special characters?");
+  while (!confirmUppercase && !confirmLowercase && !confirmNumber && !confirmSpecial) {
     choices = alert("You need to make a selection.");
+    passwordCriteria ();
   } 
+}
 
 
-  //all 4 cases selected
-  else if (confirmUppercase && confirmLowercase && confirmNumber && confirmSpecial) {
+
+//randomly generates a password based on chosen criteria
+function generatePassword() {
+
+
+//all 4 cases selected
+
+
+  if (confirmUppercase && confirmLowercase && confirmNumber && confirmSpecial) {
     choices = special.concat(number, lowerCase, upperCase);
   }
 
 
-  //only 3 cases selected
+//only 3 cases selected
+
+
   else if (confirmLowercase && confirmNumber && confirmSpecial) {
     choices = special.concat(number, lowerCase);
   }
@@ -68,7 +77,9 @@ function generatePassword() {
   }
 
 
-  //only 2 cases selected
+//only 2 cases selected
+
+
   else if (confirmUppercase && confirmLowercase) {
     choices = lowerCase.concat(upperCase);
   }
@@ -89,8 +100,10 @@ function generatePassword() {
   }
 
 
-  //only 1 case selected
-  //need to use space variable to fill the uppercase conversion
+//only 1 case selected
+//need to use space variable to fill the uppercase conversion
+
+
   else if (confirmUppercase) {
     choices = space.concat(upperCase);
   }
@@ -103,26 +116,30 @@ function generatePassword() {
   else if (confirmNumber) {
     choices = number;
   }
-
   
-  //array placeholder based on the length that the user inputted
+
+//array placeholder based on the length that the user inputted
   var password = [];
 
 
-  //for loop to randomly select the desired amount of characters in a random order
+//for loop to randomly select the desired amount of characters in a random order
   for (var i = 0; i < enter; i++) {
     var pickChoices = choices[Math.floor(Math.random() * choices.length)];
     password.push(pickChoices);
   };
-  //use .join to arrange return as a string
+//use .join to arrange return as a string
   var generatedPassword = password.join("");
   return generatedPassword;
 };
+
+
+
 // Write password to the #password input
 function writePassword() {
+  passwordLength();
+  passwordCriteria();
   var password = generatePassword();
   var passwordText = document.querySelector("#password");
-
   passwordText.value = password;
 }
 
@@ -132,4 +149,3 @@ function writePassword() {
 generateBtn.addEventListener("click", writePassword);
 //maybe use generateBtn.onclick = function(writePassword()){}
 //
-
