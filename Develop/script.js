@@ -19,7 +19,7 @@ upperCase = lowerCase.map(toUpper);
 
 //separate each task into different functions to make code easier to read/understand and debug
 
-//asks the user for the required password length
+//asks the user for the required password length, make sure to use parseInt so that you always return an integer
 function passwordLength() {
   enter = parseInt(prompt("How many characters would you like your password to be? Must be between 8 and 128."));
   if (!enter){
